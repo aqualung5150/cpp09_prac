@@ -6,49 +6,23 @@
 #include <sstream>
 #include <iostream>
 
-// template<typename T>
-// typename T::const_iterator greatest_less(T const &m, typename T::key_type const &k) {
-//     typename T::const_iterator it = m.upper_bound(k);
-//     if(it != m.begin()) {
-//         return --it;
-//     }
-//     return m.end();
-// }
+template<typename T>
+typename T::const_iterator greatest_less(T const &m, typename T::key_type const &k) {
+    typename T::const_iterator it = m.upper_bound(k);
+    if(it != m.begin()) {
+        return --it;
+    }
+    return m.end();
+}
 
-// template<typename T>
-// typename T::iterator greatest_less(T &m, typename T::key_type const &k) {
-//     typename T::iterator it = m.upper_bound(k);
-//     if(it != m.begin()) {
-//         return --it;
-//     }
-//     return m.end();
-// }
-
-// void setDB(std::map<std::string, double> &database, const std::string &csv)
-// {
-//     std::ifstream inputFile;
-//     std::string line;
-//     std::string date;
-//     std::string exchange_rate;
-//     std::stringstream inputString;
-//     double i;
-
-//     inputFile.open(csv); // if(err)
-//     line = "";
-//     getline(inputFile, line); // Skip to store first line
-//     while (getline(inputFile, line))
-//     {
-//         inputString.str(line);
-
-//         getline(inputString, date, ',');
-//         getline(inputString, exchange_rate, '\n');
-//         i = std::strtod(exchange_rate.c_str(), NULL);
-
-//         database.insert(std::pair<std::string, double>(date, i));
-
-//         inputString.clear();
-//     }
-// }
+template<typename T>
+typename T::iterator greatest_less(T &m, typename T::key_type const &k) {
+    typename T::iterator it = m.upper_bound(k);
+    if(it != m.begin()) {
+        return --it;
+    }
+    return m.end();
+}
 
 ////////////////
 
