@@ -51,15 +51,9 @@ public:
     {
         std::stringstream in;
         std::string line;
-        int push_count;
-        int oper_count;
         long a;
         long b;
-        bool flag;
 
-        push_count = 0;
-        oper_count = 0;
-        flag = true;
         in.str(input);
         line = "";
         while(std::getline(in, line, ' '))
@@ -69,23 +63,24 @@ public:
                 std::cout << "Error" << std::endl;
                 exit(1);
             }
+
             if(isdigit(line[0]))
-                    _s.push(std::strtol(line.c_str(), NULL, 10));
+                _s.push(std::strtol(line.c_str(), NULL, 10));
             else
             {        
-                a = _s.top();
-                _s.pop();
                 b = _s.top();
+                _s.pop();
+                a = _s.top();
                 _s.pop();
 
                 if(line[0] == '+')
-                    _s.push(b + a);
+                    _s.push(a + b);
                 else if(line[0] == '-')
-                    _s.push(b - a);
+                    _s.push(a - b);
                 else if(line[0] == '*')
-                    _s.push(b * a);
+                    _s.push(a * b);
                 else if(line[0] == '/')
-                    _s.push(b / a);
+                    _s.push(a / b);
             }
         }
         if(line != "")
