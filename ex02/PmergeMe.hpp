@@ -38,7 +38,25 @@ public:
             _array.push_back(n);
         }
     }
-    PmergeMe(const PmergeMe& p);
+    
+    PmergeMe(const PmergeMe& p)
+    {
+        _array = p._array;
+    }
+
+    ~PmergeMe()
+    {
+    }
+
+    PmergeMe& operator=(const PmergeMe& p)
+    {
+        if (this == &p)
+            return *this;
+        
+        _array = p._array;
+
+        return *this;
+    }
 
     // getter
     LongArray& getArray()
