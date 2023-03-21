@@ -8,14 +8,14 @@ int main(int argc, char** argv)
 
     if (argc != 2) // Invalid argument
     {
-        std::cerr << "Error: invalid argument." << std::endl;
+        std::cerr << "Error: could not open file." << std::endl;
         return 1;
     }
     
     input.open(argv[1]); // Open input file
     if(input.fail())
     {
-        std::cerr << "Error: can not open input file." << std::endl;
+        std::cerr << "Error: could not open file." << std::endl;
         return 1;
     }
 

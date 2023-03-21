@@ -123,9 +123,9 @@ static bool invalidDate(std::string& sub)
     sub[4] != '-' || sub[7] != '-')
         return true;
     
-    long year = strtol(sub.substr(0, 4).c_str(), NULL, 0);
-    long month = strtol(sub.substr(5, 2).c_str(), NULL, 0);
-    long day = strtol(sub.substr(8, 2).c_str(), NULL, 0);
+    long year = strtol(sub.substr(0, 4).c_str(), NULL, 10);
+    long month = strtol(sub.substr(5, 2).c_str(), NULL, 10);
+    long day = strtol(sub.substr(8, 2).c_str(), NULL, 10);
 
     if (month < 1 || month > 12 || day < 1 || day > 31)
         return true;
@@ -183,7 +183,8 @@ int BitcoinExchange::exchange(std::string& line)
     // Exchange valid format
     sub = line.substr(0, line.find(" | "));
     if (greatest_less(_database, sub) != _database.end())
-        std::cout << sub << " => " << value << " = " << greatest_less(_database, sub)->second * value << std::endl;
+        std::cout << std::setprecision(std::numeric_limits<double>::digits10) << sub << \
+        " => " << value << " = " << greatest_less(_database, sub)->second * value << std::endl;
     else
         std::cerr << "Error: no data => " << sub << std::endl;
     return 0;
