@@ -113,7 +113,8 @@ int BitcoinExchange::exchange(std::string& line)
     // Invalid date format
     sub = line.substr(0, line.find(" | "));
     if (sub.length() != 10 || !is_digit(sub.substr(0, 4)) || \
-    !is_digit(sub.substr(5, 2)) || !is_digit(sub.substr(8, 2)))
+    !is_digit(sub.substr(5, 2)) || !is_digit(sub.substr(8, 2)) || \
+    sub[4] != '-' || sub[7] != '-')
     {
         std::cerr << "Error: invalid date format => " << sub << std::endl;
         return 1;
