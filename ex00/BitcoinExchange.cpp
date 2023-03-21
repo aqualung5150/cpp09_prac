@@ -79,11 +79,16 @@ static bool invalid_number(std::string str)
 {
     int dot_count;
 
+    if (str.length() <= 0)
+        return true;
+    if (str[0] != '+' && str[0] != '-' && str[0] != '.' && !std::isdigit(str[0]))
+        return true;
     dot_count = 0;
-    for(unsigned long i = 0; i < str.length(); ++i)
+    if (str[0] == '.')
+        ++dot_count;
+    for(unsigned long i = 1; i < str.length(); ++i)
     {
-        if(!std::isdigit(str[i]) && str[i] != '-' && \
-        str[i] != '+' && str[i] != '.')
+        if(!std::isdigit(str[i]) && str[i] != '.')
         {
             std::cerr << "Error: invalid value format => " << str << std::endl;
             return true;
@@ -162,7 +167,10 @@ int BitcoinExchange::exchange(std::string& line)
     // Invalid value number
     sub = line.substr(line.find(" | ") + 3);
     if(invalid_number(sub))
+    {
+        std::cerr << "Error: invalid value format => " << sub << std::endl;
         return 1;
+    }
     value = std::strtod(sub.c_str(), NULL);
     if (value > 1000.0)
     {
