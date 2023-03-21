@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <limits>
+#include <iomanip>
 
 class BitcoinExchange
 {
