@@ -38,7 +38,7 @@ public:
             _array.push_back(n);
         }
     }
-    
+
     PmergeMe(const PmergeMe& p)
     {
         _array = p._array;
@@ -81,12 +81,11 @@ public:
 
     void merge(typename LongArray::iterator& first, typename LongArray::iterator& middle, typename LongArray::iterator& last)
     {
-        // int n1 = std::distance(first, middle) + 1;
-        int n2 = std::distance(middle, last);
+        int RSIZE = std::distance(middle, last);
         int LIDX = 0;
         int RIDX = 0;
 
-        for (;RIDX < n2;)
+        while (RIDX < RSIZE)
         {
             if (middle[RIDX] > first[LIDX])
             {
