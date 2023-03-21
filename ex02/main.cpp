@@ -1,32 +1,61 @@
 #include "PmergeMe.hpp"
-#include <vector>
 #include <deque>
+#include <ctime>
+#include <sys/time.h>
 
 
 int main(int argc, char** argv)
 {
-    if (argc < 2) //err
+    if (argc < 2)
+    {
+        std::cout << "Error" << std::endl;
         return 1;
+    }
 
-    PmergeMe< std::vector<long> > v(argv);
-    std::vector<long>::iterator v_first = v.getArray().begin();
-    std::vector<long>::iterator v_last = v.getArray().end();
+    long v_elapsed;
+    long d_elapsed;
 
-    PmergeMe< std::deque<long> > d(argv);
-    std::deque<long>::iterator d_first = d.getArray().begin();
-    std::deque<long>::iterator d_last = d.getArray().end();
+    // argv to  std::string
+    std::vector<std::string> input;
+    input.assign(argv + 1, argv + argc);
 
-    v.mysort(v_first, v_last);
-    d.mysort(d_first, d_last);
+    // std::vector sort
+    {
+        struct timeval start, end;
+        gettimeofday(&start, NULL);
 
-    std::cout << "Vector:" << std::endl;
-    v.print();
+        PmergeMe< std::vector<long> > v(input);
+        std::vector<long>::iterator v_first = v.getArray().begin();
+        std::vector<long>::iterator v_last = v.getArray().end();
 
-    std::cout << std::endl;
+        v.mysort(v_first, v_last);
 
-    std::cout << "Deque:" << std::endl;
-    d.print();
+        gettimeofday(&end, NULL);
+        v_elapsed = end.tv_usec - start.tv_usec;
+    }
 
+    // std::deque sort
+    {
+        struct timeval start, end;
+        gettimeofday(&start, NULL);
+
+        PmergeMe< std::deque<long> > d(input);
+        std::deque<long>::iterator d_first = d.getArray().begin();
+        std::deque<long>::iterator d_last = d.getArray().end();
+
+        d.mysort(d_first, d_last);
+
+        gettimeofday(&end, NULL);
+        d_elapsed = end.tv_usec - start.tv_usec;
+
+        std::cout << "Before:\t";
+        print(input);
+        std::cout << "After:\t";
+        print(d.getArray());
+    }
+
+    std::cout << "Time to process a range of "<< argc - 1 <<" elements with std::vector\t: " << v_elapsed << " microsec" << std::endl;
+    std::cout << "Time to process a range of "<< argc - 1 <<" elements with std::deque\t: " << d_elapsed << " microsec" << std::endl;
 
     return 0;
 }

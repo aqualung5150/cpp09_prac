@@ -3,9 +3,10 @@
 
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
-template<typename T>
-void print(T arr)
+template <typename T>
+void print(T& arr)
 {
     for (typename T::iterator it = arr.begin(); it != arr.end(); it++) 
         std::cout << *it << " ";
@@ -22,12 +23,24 @@ public:
     {
     }
 
-    PmergeMe(char** argv)
+    PmergeMe(const std::vector<std::string>& input)
     {
-        for(int i = 1; argv[i]; ++i)
-            _array.push_back(std::strtol(argv[i], NULL, 10));
-    }
+        long n;
 
+        for (std::vector<std::string>::const_iterator it = input.begin(); it != input.end(); ++it)
+        {
+            n = std::strtol((*it).c_str(), NULL, 10);
+            if (n <= 0)
+            {
+                std::cout << "Error" << std::endl;
+                exit(1);
+            }
+            _array.push_back(n);
+        }
+    }
+    PmergeMe(const PmergeMe& p);
+
+    // getter
     LongArray& getArray()
     {
         return _array;
@@ -48,7 +61,6 @@ public:
         }
     }
 
-    //merge
     void merge(typename LongArray::iterator& first, typename LongArray::iterator& middle, typename LongArray::iterator& last)
     {
         // int n1 = std::distance(first, middle) + 1;
@@ -84,14 +96,6 @@ public:
         else
             insertionSort(first, last);
     }
-
-    void print()
-    {
-        for (typename LongArray::iterator it = _array.begin(); it != _array.end(); it++) 
-            std::cout << *it << " ";
-        std::cout << '\n';
-    }
-
 };
 
 #endif
