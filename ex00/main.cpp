@@ -20,6 +20,10 @@ int main(int argc, char** argv)
     }
 
     std::getline(input, line); // Skip first line "date | value"
+    if(line.compare("date | value"))
+    {
+        std::cerr << "Error: invalid file." << std::endl;
+    }
     while(std::getline(input, line))
     {
         if(line.length() != 1)

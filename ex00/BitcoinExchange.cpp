@@ -99,6 +99,48 @@ static bool invalid_number(std::string str)
     return false;
 }
 
+static bool is_leap(long year)
+{
+    if (year % 400 == 0)
+        return true;
+    else if (year % 100 == 0)
+        return false;
+    else if (year % 4 == 0)
+        return true;
+    else
+        return false;
+}
+
+static bool invalid_date(std::string& sub)
+{
+    if (sub.length() != 10 || !is_digit(sub.substr(0, 4)) || \
+    !is_digit(sub.substr(5, 2)) || !is_digit(sub.substr(8, 2)) || \
+    sub[4] != '-' || sub[7] != '-')
+        return true;
+    
+    long year = strtol(sub.substr(0, 4).c_str(), NULL, 0);
+    long month = strtol(sub.substr(5, 2).c_str(), NULL, 0);
+    long day = strtol(sub.substr(8, 2).c_str(), NULL, 0);
+
+    
+
+    if (month < 1 || month > 12 || day < 1 || day > 31)
+        return true;
+    
+    if (month == 2)
+    {
+        if (is_leap(year))
+            return (day > 29);
+        else
+            return (day > 28);
+    }
+
+    if (month == 4 || month == 6 || month == 9 || month == 11)
+        return (day > 30);
+    
+    return false;
+}
+
 int BitcoinExchange::exchange(std::string& line)
 {
     std::string sub;
@@ -112,9 +154,7 @@ int BitcoinExchange::exchange(std::string& line)
     }
     // Invalid date format
     sub = line.substr(0, line.find(" | "));
-    if (sub.length() != 10 || !is_digit(sub.substr(0, 4)) || \
-    !is_digit(sub.substr(5, 2)) || !is_digit(sub.substr(8, 2)) || \
-    sub[4] != '-' || sub[7] != '-')
+    if (invalid_date(sub))
     {
         std::cerr << "Error: invalid date format => " << sub << std::endl;
         return 1;
@@ -136,6 +176,9 @@ int BitcoinExchange::exchange(std::string& line)
     }
     // Exchange valid format
     sub = line.substr(0, line.find(" | "));
-    std::cout << sub << " => " << value << " = " << greatest_less(_database, sub)->second * value << std::endl;
+    if (greatest_less(_database, sub) != _database.end())
+        std::cout << sub << " => " << value << " = " << greatest_less(_database, sub)->second * value << std::endl;
+    else
+        std::cerr << "Error: no data => " << sub << std::endl;
     return 0;
 }
