@@ -13,7 +13,7 @@ BitcoinExchange::BitcoinExchange(const std::string& csvFile)
     std::stringstream inputString;
     double d;
 
-    inputFile.open(csvFile);
+    inputFile.open(csvFile.c_str());
     if(inputFile.fail())
     {
         std::cerr << "Error: can not open input file." << std::endl;

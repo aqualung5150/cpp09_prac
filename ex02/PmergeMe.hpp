@@ -1,10 +1,8 @@
 #ifndef PMERGEME_HPP
 #define PMERGEME_HPP
 
-#include <vector>
-#include <deque>
-
 #include <iostream>
+#include <algorithm>
 
 template<typename T>
 void print(T arr)
@@ -14,11 +12,11 @@ void print(T arr)
     std::cout << '\n';
 }
 
+template <typename LongArray>
 class PmergeMe
 {
 private:
-    std::vector<unsigned long> _v;
-    std::deque<unsigned long> _d;
+    LongArray _array;
 public:
     PmergeMe()
     {
@@ -27,31 +25,22 @@ public:
     PmergeMe(char** argv)
     {
         for(int i = 1; argv[i]; ++i)
-        {
-            _v.push_back(std::strtoul(argv[i], NULL, 10));
-            _d.push_back(std::strtoul(argv[i], NULL, 10));
-        }
+            _array.push_back(std::strtol(argv[i], NULL, 10));
     }
 
-    std::vector<unsigned long>& getV()
+    LongArray& getArray()
     {
-        return _v;
-    }
-
-    std::deque<unsigned long>& getD()
-    {
-        return _d;
+        return _array;
     }
 
     /////// SORT ////////////
-    template<typename Iterator>
-    void insertionSort(Iterator& first, Iterator& last)
+    void insertionSort(typename LongArray::iterator& first, typename LongArray::iterator& last)
     {
-        for (Iterator it = first + 1; it != last; ++it)
+        for (typename LongArray::iterator it = first + 1; it != last; ++it)
         {        
             // Searching the upper bound, i.e., first 
             // element greater than *it from beginning
-            Iterator const insertion_point = 
+            typename LongArray::iterator const insertion_point = 
                     std::upper_bound(first, it, *it);
             
             // Shifting the unsorted part
@@ -60,8 +49,7 @@ public:
     }
 
     //merge
-    template<typename Iterator>
-    void merge(Iterator& first, Iterator& middle, Iterator& last)
+    void merge(typename LongArray::iterator& first, typename LongArray::iterator& middle, typename LongArray::iterator& last)
     {
         // int n1 = std::distance(first, middle) + 1;
         int n2 = std::distance(middle, last);
@@ -82,10 +70,9 @@ public:
         }
     }
 
-    template <typename Iterator>
-    void mysort(Iterator& first, Iterator& last)
+    void mysort(typename LongArray::iterator& first, typename LongArray::iterator& last)
     {
-        Iterator middle;
+        typename LongArray::iterator middle;
 
         if (std::distance(first, last) > 5)
         {
@@ -96,6 +83,13 @@ public:
         }
         else
             insertionSort(first, last);
+    }
+
+    void print()
+    {
+        for (typename LongArray::iterator it = _array.begin(); it != _array.end(); it++) 
+            std::cout << *it << " ";
+        std::cout << '\n';
     }
 
 };
