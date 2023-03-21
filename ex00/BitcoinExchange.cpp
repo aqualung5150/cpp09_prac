@@ -9,9 +9,9 @@ BitcoinExchange::BitcoinExchange(const std::string& csvFile)
     std::ifstream inputFile;
     std::string line;
     std::string date;
-    std::string exchange_rate;
+    std::string exchangeRate;
     std::stringstream inputString;
-    double d;
+    double stringToDouble;
 
     inputFile.open(csvFile.c_str());
     if(inputFile.fail())
@@ -26,10 +26,10 @@ BitcoinExchange::BitcoinExchange(const std::string& csvFile)
         inputString.str(line);
 
         std::getline(inputString, date, ',');
-        std::getline(inputString, exchange_rate, '\n');
-        d = std::strtod(exchange_rate.c_str(), NULL);
+        std::getline(inputString, exchangeRate, '\n');
+        stringToDouble = std::strtod(exchangeRate.c_str(), NULL);
 
-        _database.insert(std::pair<std::string, double>(date, d));
+        _database.insert(std::pair<std::string, double>(date, stringToDouble));
 
         inputString.clear();
     }
@@ -65,7 +65,7 @@ static std::map<std::string, double>::iterator greatest_less(std::map<std::strin
     return m.end();
 }
 
-static bool is_digit(std::string str)
+static bool isAllDigit(std::string str)
 {
     for(unsigned long i = 0; i < str.length(); ++i)
     {
@@ -75,17 +75,17 @@ static bool is_digit(std::string str)
     return true;
 }
 
-static bool invalid_number(std::string str)
+static bool invalidNumber(std::string str)
 {
-    int dot_count;
+    int dotCount;
 
     if (str.length() <= 0)
         return true;
     if (str[0] != '+' && str[0] != '-' && str[0] != '.' && !std::isdigit(str[0]))
         return true;
-    dot_count = 0;
+    dotCount = 0;
     if (str[0] == '.')
-        ++dot_count;
+        ++dotCount;
     for(unsigned long i = 1; i < str.length(); ++i)
     {
         if(!std::isdigit(str[i]) && str[i] != '.')
@@ -94,9 +94,9 @@ static bool invalid_number(std::string str)
             return true;
         }
         else if(str[i] == '.')
-            ++dot_count;
+            ++dotCount;
     }
-    if(dot_count > 1)
+    if(dotCount > 1)
     {
         std::cerr << "Error: invalid value format => " << str << std::endl;
         return true;
@@ -104,7 +104,7 @@ static bool invalid_number(std::string str)
     return false;
 }
 
-static bool is_leap(long year)
+static bool isLeap(long year)
 {
     if (year % 400 == 0)
         return true;
@@ -116,10 +116,10 @@ static bool is_leap(long year)
         return false;
 }
 
-static bool invalid_date(std::string& sub)
+static bool invalidDate(std::string& sub)
 {
-    if (sub.length() != 10 || !is_digit(sub.substr(0, 4)) || \
-    !is_digit(sub.substr(5, 2)) || !is_digit(sub.substr(8, 2)) || \
+    if (sub.length() != 10 || !isAllDigit(sub.substr(0, 4)) || \
+    !isAllDigit(sub.substr(5, 2)) || !isAllDigit(sub.substr(8, 2)) || \
     sub[4] != '-' || sub[7] != '-')
         return true;
     
@@ -127,14 +127,12 @@ static bool invalid_date(std::string& sub)
     long month = strtol(sub.substr(5, 2).c_str(), NULL, 0);
     long day = strtol(sub.substr(8, 2).c_str(), NULL, 0);
 
-    
-
     if (month < 1 || month > 12 || day < 1 || day > 31)
         return true;
     
     if (month == 2)
     {
-        if (is_leap(year))
+        if (isLeap(year))
             return (day > 29);
         else
             return (day > 28);
@@ -159,14 +157,14 @@ int BitcoinExchange::exchange(std::string& line)
     }
     // Invalid date format
     sub = line.substr(0, line.find(" | "));
-    if (invalid_date(sub))
+    if (invalidDate(sub))
     {
         std::cerr << "Error: invalid date format => " << sub << std::endl;
         return 1;
     }
     // Invalid value number
     sub = line.substr(line.find(" | ") + 3);
-    if(invalid_number(sub))
+    if(invalidNumber(sub))
     {
         std::cerr << "Error: invalid value format => " << sub << std::endl;
         return 1;

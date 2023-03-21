@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv)
 {
-    RPN a;
+    RPN calculator;
 
     if(argc != 2)
     {
@@ -10,7 +10,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    std::cout << a.calc(argv[1]) << std::endl;
+    std::cout << calculator.calc(argv[1]) << std::endl;
 
     return 0;
 }

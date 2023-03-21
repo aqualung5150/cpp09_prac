@@ -6,7 +6,7 @@ RPN::RPN()
 
 RPN::RPN(const RPN& r)
 {
-    _s = r._s;
+    _stack = r._stack;
 }
 
 RPN::~RPN()
@@ -18,12 +18,12 @@ RPN& RPN::operator=(const RPN& r)
     if(this == &r)
         return *this;
 
-    _s = r._s;
+    _stack = r._stack;
 
     return *this;
 }
 
-static bool is_operator(std::string str)
+static bool isOperator(std::string str)
 {
     if (str.length() == 1 && (str[0] == '*' || str[0] == '/' || \
     str[0] == '+' || str[0] == '-'))
@@ -31,9 +31,9 @@ static bool is_operator(std::string str)
     return false;
 }
 
-static bool is_number(std::string str)
+static bool isNumber(std::string str)
 {
-    if (is_operator(str))
+    if (isOperator(str))
         return false;
 
     if (str[0] != '+' && str[0] != '-' && !std::isdigit(str[0]))
@@ -48,39 +48,39 @@ static bool is_number(std::string str)
     return true;
 }
 
-static bool invalid_input(std::string input)
+static bool invalidInput(std::string input)
 {
-    std::stringstream in;
+    std::stringstream inputStream;
     std::string line;
     int flag;
 
-    in.str(input);
+    inputStream.str(input);
     line = "";
 
     // First two integer && isEmpty
     for(int i = 0; i < 2;)
     {
-        if (!std::getline(in, line, ' '))
+        if (!std::getline(inputStream, line, ' '))
             return true;
         // skip space
         if (line.length() == 0)
             continue;
         else
             ++i;
-        if (!is_number(line))
+        if (!isNumber(line))
             return true;
     }
 
     flag = 1;
-    while(std::getline(in, line, ' '))
+    while(std::getline(inputStream, line, ' '))
     {
         // skip space
         if (line.length() == 0)
             continue;
-        if(!is_operator(line) && !is_number(line))
+        if(!isOperator(line) && !isNumber(line))
             return true;
 
-        if(is_number(line))
+        if(isNumber(line))
             ++flag;
         else
             --flag;
@@ -95,44 +95,44 @@ static bool invalid_input(std::string input)
 
 long RPN::calc(const std::string& input)
 {
-    std::stringstream in;
+    std::stringstream inputStream;
     std::string line;
     long a;
     long b;
 
-    in.str(input);
+    inputStream.str(input);
     line = "";
-    if(invalid_input(input))
+    if(invalidInput(input))
     {
         std::cout << "Error" << std::endl;
         exit(1);
     }
-    while(std::getline(in, line, ' '))
+    while(std::getline(inputStream, line, ' '))
     {
         // skip empty
         if(line.length() == 0)
             continue;
         // number
-        else if(is_number(line))
-            _s.push(std::strtol(line.c_str(), NULL, 10));
+        else if(isNumber(line))
+            _stack.push(std::strtol(line.c_str(), NULL, 10));
         // operator
         else
         {
-            b = _s.top();
-            _s.pop();
-            a = _s.top();
-            _s.pop();
+            b = _stack.top();
+            _stack.pop();
+            a = _stack.top();
+            _stack.pop();
 
             if(line[0] == '+')
-                _s.push(a + b);
+                _stack.push(a + b);
             else if(line[0] == '-')
-                _s.push(a - b);
+                _stack.push(a - b);
             else if(line[0] == '*')
-                _s.push(a * b);
+                _stack.push(a * b);
             else if(line[0] == '/')
             {
                 if (b != 0)
-                    _s.push(a / b);
+                    _stack.push(a / b);
                 else
                 {
                     std::cout << "Error" << std::endl;
@@ -141,5 +141,5 @@ long RPN::calc(const std::string& input)
             }
         }
     }
-    return _s.top();
+    return _stack.top();
 }

@@ -6,7 +6,7 @@
 #include <vector>
 
 template <typename T>
-void print(T& arr)
+void printElements(T& arr)
 {
     for (typename T::iterator it = arr.begin(); it != arr.end(); it++) 
         std::cout << *it << " ";
@@ -81,33 +81,31 @@ public:
 
     void merge(typename LongArray::iterator& first, typename LongArray::iterator& middle, typename LongArray::iterator& last)
     {
-        int RSIZE = std::distance(middle, last);
-        int LIDX = 0;
-        int RIDX = 0;
+        int rightArraySize = std::distance(middle, last);
+        int leftArrayIndex = 0;
+        int rightArrayIndex = 0;
 
-        while (RIDX < RSIZE)
+        while (rightArrayIndex < rightArraySize)
         {
-            if (middle[RIDX] > first[LIDX])
-            {
-                LIDX++;
-            }
+            if (middle[rightArrayIndex] > first[leftArrayIndex])
+                leftArrayIndex++;
             else
             {
-                std::rotate(first + LIDX, middle + RIDX, middle + RIDX + 1);
-                RIDX++;
+                std::rotate(first + leftArrayIndex, middle + rightArrayIndex, middle + rightArrayIndex + 1);
+                rightArrayIndex++;
             }
         }
     }
 
-    void mysort(typename LongArray::iterator& first, typename LongArray::iterator& last)
+    void mergeInsertionSort(typename LongArray::iterator& first, typename LongArray::iterator& last)
     {
         typename LongArray::iterator middle;
 
         if (std::distance(first, last) > 5)
         {
             middle = first + (std::distance(first, last) / 2);
-            mysort(first, middle);
-            mysort(middle, last);
+            mergeInsertionSort(first, middle);
+            mergeInsertionSort(middle, last);
             merge(first, middle, last);
         }
         else
