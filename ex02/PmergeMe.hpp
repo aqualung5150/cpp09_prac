@@ -81,18 +81,18 @@ public:
 
     void merge(typename LongArray::iterator& first, typename LongArray::iterator& middle, typename LongArray::iterator& last)
     {
-        int rightArraySize = std::distance(middle, last);
-        int leftArrayIndex = 0;
-        int rightArrayIndex = 0;
+        int rightSize = std::distance(middle, last);
+        int left = 0;
+        int right = 0;
 
-        while (rightArrayIndex < rightArraySize)
+        while (right < rightSize)
         {
-            if (middle[rightArrayIndex] > first[leftArrayIndex])
-                leftArrayIndex++;
+            if (middle[right] > first[left])
+                left++;
             else
             {
-                std::rotate(first + leftArrayIndex, middle + rightArrayIndex, middle + rightArrayIndex + 1);
-                rightArrayIndex++;
+                std::rotate(first + left, middle + right, middle + right + 1);
+                right++;
             }
         }
     }
